@@ -426,6 +426,25 @@ class SettingsManager(object):
                     abooks.append(a.abook)
         return abooks
 
+    def get_saved_search(self):
+        """return saved searches"""
+        result = []
+        saved_searches = self._config['folders']['saved_searches']
+        for folder in saved_searches.scalars:
+            result.append((folder, saved_searches[folder]))
+        return result
+
+    def get_folders_value(self, key):
+        try:
+            value = self._config['folders'][key]
+        except KeyError:
+            return None
+        else:
+            #if isinstance(value, Section):
+            #    return value.dict()
+            # else:
+            return value
+
     def mailcap_find_match(self, *args, **kwargs):
         """
         Propagates :func:`mailcap.find_match` but caches the mailcap (first

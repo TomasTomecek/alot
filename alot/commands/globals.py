@@ -20,6 +20,7 @@ from alot.commands import CommandParseError
 from alot.commands import commandfactory
 from alot.commands import CommandCanceled
 from alot import buffers
+from alot.db.account import Account
 from alot.widgets.utils import DialogBox
 from alot import helper
 from alot.db.errors import DatabaseLockedError
@@ -482,6 +483,28 @@ class OpenBufferlistCommand(Command):
         else:
             bl = buffers.BufferlistBuffer(ui, self.filtfun)
             ui.buffer_open(bl)
+
+
+@registerCommand(MODE, 'folders')
+class OpenFolderlistCommand(Command):
+    def apply(self, ui):
+        f_buffers = ui.get_buffers_of_type(buffers.FolderTreeBuffer)
+        if f_buffers:
+            ui.buffer_focus(f_buffers[0])
+        else:
+            # I'm not sure if it's better to use normuch's config here
+            # or force users to specify path to their account, again.
+            # I'm also not sure how would this work for multiple accounts,
+            # since you have only one notmuch config, which accepts only
+            # one path to the account which processes
+            account = Account(
+                ui.dbman,
+                settings.get_notmuch_setting('database', 'path'),
+                saved_searches=settings.get_saved_search(),
+                blacklist_folders=settings.get_folders_value('blacklisted_folders'),
+            )
+            folder_buffer = buffers.FolderTreeBuffer(ui, account)
+            ui.buffer_open(folder_buffer)
 
 
 @registerCommand(MODE, 'taglist', arguments=[

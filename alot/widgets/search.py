@@ -113,23 +113,36 @@ class ThreadlineWidget(urwid.AttrMap):
             if self.thread:
                 fallback_normal = struct[name]['normal']
                 fallback_focus = struct[name]['focus']
-                tag_widgets = [TagWidget(t, fallback_normal, fallback_focus)
-                               for t in self.thread.get_tags()]
-                tag_widgets.sort(tag_cmp,
-                                 lambda tag_widget: tag_widget.translated)
+                if minw and maxw:
+                    tags = " ".join(self.thread.get_tags())
+                else:
+                    tag_widgets = [TagWidget(t, fallback_normal, fallback_focus)
+                                   for t in self.thread.get_tags()]
+                    tag_widgets.sort(tag_cmp,
+                                     lambda tag_widget: tag_widget.translated)
             else:
-                tag_widgets = []
-            cols = []
-            length = -1
-            for tag_widget in tag_widgets:
-                if not tag_widget.hidden:
-                    wrapped_tagwidget = tag_widget
-                    tag_width = tag_widget.width()
-                    cols.append(('fixed', tag_width, wrapped_tagwidget))
-                    length += tag_width + 1
-            if cols:
-                part = urwid.Columns(cols, dividechars=1)
-                width = length
+                if minw and maxw:
+                    tags = ""
+                else:
+                    tag_widgets = []
+            if minw and maxw:
+                tagsstring = pad(tags)
+                tags_w = AttrFlipWidget(urwid.Text(tagsstring),
+                                           struct['tags'])
+                width = len(tagsstring)
+                part = tags_w
+            else:
+                cols = []
+                length = -1
+                for tag_widget in tag_widgets:
+                    if not tag_widget.hidden:
+                        wrapped_tagwidget = tag_widget
+                        tag_width = tag_widget.width()
+                        cols.append(('fixed', tag_width, wrapped_tagwidget))
+                        length += tag_width + 1
+                if cols:
+                    part = urwid.Columns(cols, dividechars=1)
+                    width = length
         return width, part
 
     def rebuild(self):

@@ -96,6 +96,9 @@ show_statusbar = boolean(default=True)
 # * `{pending_writes}`: number of pending write operations to the index
 bufferlist_statusbar = mixed_list(string, string, default=list('[{buffer_no}: bufferlist]','{input_queue} total messages: {total_messages}'))
 
+
+folders_statusbar = mixed_list(string, string, default=list('{saved_search_messages} watched messages', '{folders_count} folders'))
+
 # Format of the status-bar in search mode.
 # This is a pair of strings to be left and right aligned in the status-bar.
 # Apart from the global variables listed at :ref:`bufferlist_statusbar <bufferlist-statusbar>`
@@ -301,3 +304,10 @@ prefer_plaintext = boolean(default=False)
 
             # contacts file used for type 'abook' address book
             abook_contacts_file = string(default='~/.abook/addressbook')
+
+# configuration related to folders buffer
+[folders]
+    blacklisted_folders = force_list(default=list())
+    [[saved_searches]]
+        __many__ = force_list(default=list())
+

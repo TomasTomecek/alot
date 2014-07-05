@@ -30,6 +30,16 @@ q = exit
     x = close
     enter = open
 
+[folders]
+    enter = open
+    c = fold
+    e = unfold
+    C = fold --all
+    E = unfold --all
+    s = mark_as_read
+    n = move unread next
+    N = move unread previous
+
 [search]
     enter = select
     a = toggletags inbox

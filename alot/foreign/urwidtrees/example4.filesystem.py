@@ -10,6 +10,11 @@ from tree import Tree
 from decoration import CollapsibleArrowTree
 
 
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+
+
 # define selectable urwid.Text widgets to display paths
 class FocusableText(urwid.WidgetWrap):
     """Widget to display paths lines"""
