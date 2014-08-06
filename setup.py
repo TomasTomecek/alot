@@ -1,7 +1,23 @@
 #!/usr/bin/env python
 
 from setuptools import setup, find_packages
+import subprocess
+
 import alot
+
+
+class PyTest(Command):
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        errno = subprocess.call(['py.test', 'tests/'])
+        raise SystemExit(errno)
 
 
 setup(name='alot',
@@ -32,6 +48,8 @@ setup(name='alot',
         'twisted>=10.2.0',
         'python-magic',
         'configobj>=4.7.0',
-        'pygpgme>=0.2'],
+        'pygpgme>=0.2',
+        'pytest'],
       provides='alot',
+      cmdclass={'test': PyTest},
       )
